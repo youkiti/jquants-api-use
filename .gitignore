@@ -3,3 +3,5 @@
 venv/
 output/
 *.csv
+
+__pycache__/
