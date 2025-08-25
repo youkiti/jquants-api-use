@@ -4,29 +4,59 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a J-Quants API development repository for working with Japanese stock market data. The main content is a Jupyter notebook (`jquants_api_quick_start.ipynb`) that demonstrates how to use the J-Quants API to fetch and analyze Japanese financial market data.
+This is a J-Quants API development repository for working with Japanese stock market data. It includes both a Jupyter notebook for tutorials and a Python script for automated stock metrics retrieval.
 
 ## Repository Structure
 
-- `jquants_api_quick_start.ipynb` - Main Jupyter notebook with J-Quants API examples and tutorials
-- `.env` - Environment variables for API credentials (gitignored)
-- `README.md` - Basic project description in Japanese
+- `jquants_api_quick_start.ipynb` - Jupyter notebook with J-Quants API tutorials
+- `fetch_stock_metrics_with_valuation.py` - **Main script** for fetching stock data
+- `quants-codes.txt` - List of stock codes to analyze (17 Japanese stocks)
+- `output/` - Output folder for CSV results (gitignored)
+- `venv/` - Virtual environment (gitignored)
+- `.env` - API credentials (gitignored)
+- `requirements.txt` - Python dependencies
 
-## Key Development Tasks
+## Main Development Commands
 
-### Running the Notebook
-The notebook is designed to run in Google Colab and includes:
-- Initial setup and imports
-- Google Drive mounting for secure credential storage
-- API authentication and token management
-- Examples of fetching various market data (daily quotes, trading calendar, etc.)
+### Setup
+```bash
+# Install dependencies
+python3 -m venv venv
+source venv/bin/activate  # Windows: venv\Scripts\activate
+pip install -r requirements.txt
 
-### API Endpoints
-The notebook demonstrates usage of J-Quants API endpoints including:
-- `/prices/daily_quotes` - Stock price data (adjusted and unadjusted)
-- `/market/trading_calendar` - Trading calendar information for TSE and OSE
+# Configure API credentials
+cp .env.example .env
+# Edit .env with your J-Quants API credentials
+```
+
+### Running Stock Analysis
+```bash
+# Activate virtual environment and run main script
+source venv/bin/activate && python fetch_stock_metrics_with_valuation.py
+```
+
+## Key Features
+
+### Stock Metrics Script
+The main script (`fetch_stock_metrics_with_valuation.py`) fetches:
+- **Latest stock prices** (Close price from 2024-12-30)
+- **PER (Price-to-Earnings Ratio)** - Both current and forecast
+- **PBR (Price-to-Book Ratio)** - Current ratio
+- **Company names** - Japanese company names
+
+### Output
+- Results saved to `output/stock_metrics_YYYYMMDD_HHMMSS.csv`
+- Console display with formatted table
+- All CSV files are gitignored for clean repository
+
+### API Endpoints Used
+- `/listed/info` - Company information
+- `/prices/daily_quotes` - Stock price data
+- `/fins/statements` - Financial statements for PER/PBR calculation
 
 ## Security Notes
-- API credentials should be stored in `.env` file (which is gitignored)
-- The notebook uses Google Drive for secure credential storage when running in Colab
-- Never commit API keys or tokens directly in code
+- API credentials stored in `.env` file (gitignored)
+- Supports both refresh token and email/password authentication
+- Output files automatically excluded from git
+- Never commit sensitive data
